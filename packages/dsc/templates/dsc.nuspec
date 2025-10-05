@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>dsc</id>
+    <version>###version###</version>
+    <packageSourceUrl>https://github.com/bjoernf73/auchocos/tree/main/packages/dsc/package/</packageSourceUrl>
+    <!-- owners is a poor name for maintainers of the package. It sticks around by this name for compatibility reasons. It basically means you. -->
+    <owners>henrikhalt</owners>
+    <title>dsc (Install)</title>
+    <authors>Microsoft</authors>
+    <!-- projectUrl is required for the community feed -->
+    <projectUrl>https://github.com/PowerShell/DSC</projectUrl>
+    <!-- There are a number of CDN Services that can be used for hosting the Icon for a package. More information can be found here: https://docs.chocolatey.org/en-us/create/create-packages#package-icon-guidelines -->
+    <!-- Here is an example using Githack -->
+    <iconUrl>https://glcdn.githack.com/guided-explorations/microsoft/chocolatey/powershell-core/-/raw/master/powershell-core/appicon.png</iconUrl>
+    <!-- <copyright>Year Software Vendor</copyright> -->
+    <!-- If there is a license Url available, it is required for the community feed -->
+    <licenseUrl>https://raw.githubusercontent.com/PowerShell/DSC/refs/heads/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/PowerShell/DSC</projectSourceUrl>
+    <docsUrl>https://learn.microsoft.com/nb-no/powershell/dsc/overview?view=dsc-3.0&amp;preserve-view=true</docsUrl>
+    <bugTrackerUrl>https://github.com/PowerShell/DSC/issues</bugTrackerUrl>
+    <tags>dsc desired_state_configuration dscv3 dsc_v3 dsc.exe</tags>
+    <summary>DSC (v3) is the latest iteration of Microsoft's Desired State Configuration platform</summary>
+    <description>DSC v3 is an open source command line application that abstracts the management of software components declaratively and idempotently. DSC v3 runs on Linux, macOS, and Windows without any external dependencies.
+
+With DSC v3, you can:
+
+- Author resources to manage your systems in any language
+- Invoke individual resources
+- Create configuration documents that define the desired state of a system</description>
+  <releaseNotes>https://github.com/PowerShell/DSC/releases/tag/v3.1.1</releaseNotes>
+  </metadata>
+  <files>
+    <!-- this section controls what actually gets packaged into the Chocolatey package -->
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

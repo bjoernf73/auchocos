@@ -1,0 +1,1 @@
+Each package has a folder here. The actual chocolatey package content is below the [package_name]/package folder. 
