@@ -1,4 +1,4 @@
-function Get-GithubLatestRelease {
+function Get-auGithubLatestRelease {
     <#
     .SYNOPSIS
         Gets data on the latest GitHub release for a repo.
@@ -19,7 +19,7 @@ function Get-GithubLatestRelease {
             VersionStringProperty = "name"
             VersionStringScriptblock = { $VersionString.substring(1) }
         }
-        Get-GithubLatestRelease @GetGithubReleaseParams
+        Get-auGithubLatestRelease @GetGithubReleaseParams
     .PARAMETER Repo
         GitHub repo in the format "owner/repo", like "PowerShell/DSC". Get the front page of
         the repo, like "https://github.com/PowerShell/DSC", remove "https://github.com/", 
@@ -115,7 +115,9 @@ function Get-GithubLatestRelease {
         # reactions        : @{url=https://api.github.com/repos/PowerShell/DSC/releases/232324819/reactions; total_count=3; +1=0; -1=0; laugh=0; hooray=2; confused=0; heart=0; rocket=1; eyes=0}
         # mentions_count   : 1
 
-        $AssetObj = $LatestNoPrerelaseObj.assets | Where-Object { $_.Name -match "$DownloadFileStringMatch"}
+        $AssetObj = $LatestNoPrerelaseObj.assets | Where-Object { 
+            $_.Name -match "$DownloadFileStringMatch"
+        }
 
         # url                  : https://api.github.com/repos/PowerShell/DSC/releases/assets/272825300
         # id                   : 272825300

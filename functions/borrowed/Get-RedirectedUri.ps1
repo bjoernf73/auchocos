@@ -14,7 +14,7 @@ function Get-RedirectedUri {
     .LINK
         https://winblog.it.umn.edu/2018/05/19/getting-redirected-uris-in-powershell/
     #>
- 
+
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
@@ -32,7 +32,6 @@ function Get-RedirectedUri {
                     # This is for Powershell core
                     $redirectUri = $request.BaseResponse.RequestMessage.RequestUri.AbsoluteUri
                 }
- 
                 $retry = $false
             }
             catch {
@@ -45,7 +44,6 @@ function Get-RedirectedUri {
                 }
             }
         } while ($retry)
- 
         $redirectUri
     }
 }

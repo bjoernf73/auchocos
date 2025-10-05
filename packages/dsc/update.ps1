@@ -1,5 +1,5 @@
 # just dot source like a module
-. "$PSScriptRoot\..\..\functions\Get-GithubLatestRelease.ps1"
+. "$PSScriptRoot\..\..\functions\Get-auGithubLatestRelease.ps1"
 
 $TemplateNuspecPath = "$($PSScriptRoot)\templates\dsc.nuspec"
 $TemplateChocolateyInstallPath = "$($PSScriptRoot)\templates\chocolateyinstall.ps1"
@@ -20,7 +20,7 @@ $GetGithubReleaseParams = @{
     VersionStringProperty = "name"
     VersionStringScriptblock = { $VersionString.substring(1) }
 }
-$GithubLatestRelease = Get-GithubLatestRelease @GetGithubReleaseParams
+$GithubLatestRelease = Get-auGithubLatestRelease @GetGithubReleaseParams
 if( -not $GithubLatestRelease.NeedsUpdate ) {
     Write-Host "No update needed. Current version $CurrentVersionString is the latest."
     return
