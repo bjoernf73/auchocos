@@ -1,48 +1,48 @@
-Import-Module chocolatey-au
+# just dot source like a module
+. "$PSScriptRoot\..\..\functions\Get-GithubLatestRelease.ps1"
 
-function global:au_SearchReplace {
-    @{
-        'tools\chocolateyInstall.ps1' = @{
-            "(^\s*url\s*=\s*)('.*')"    = "`$1'$($Latest.Url32)'"
-            "(^\s*url64bit\s*=\s*)('.*')"    = "`$1'$($Latest.Url64)'"
-            "(^\s*checksum\s*=\s*)('.*')"   = "`$1'$($Latest.Checksum32)'"
-            "(^\s*checksum64\s*=\s*)('.*')"   = "`$1'$($Latest.Checksum64)'"
-        }
-    }
+$TemplateNuspecPath = "$($PSScriptRoot)\templates\dsc.nuspec"
+$TemplateChocolateyInstallPath = "$($PSScriptRoot)\templates\chocolateyinstall.ps1"
+$CurrentNuspecPath  = "$($PSScriptRoot)\package\dsc.nuspec"
+$CurrentChocolateyInstallPath = "$($PSScriptRoot)\package\tools\chocolateyinstall.ps1"
+
+# get the current version
+
+[xml]$doc = Get-Content $CurrentNuspecPath
+$CurrentVersionString = $doc.package.metadata.version
+$CurrentVersion = [system.version]$CurrentVersionString
+
+# get the latest release on github
+$GetGithubReleaseParams = @{
+    Repo = "PowerShell/DSC"
+    DownloadFileStringMatch = "x86_64-pc-windows-msvc\.zip$"
+    CurrentVersion = $CurrentVersion
+    VersionStringProperty = "name"
+    VersionStringScriptblock = { $VersionString.substring(1) }
 }
-
-. ../_scripts/GitHub.ps1
-
-function global:au_GetLatest {
-    # This repo has releases for the cli tool as well as VS Code vsix
-    $release = Get-GitHubLatestRelease "tenable/terrascan"
-    
-    $version = Get-ReleaseVersion -release $release -prefix "v"
-
-    # Convert semver2 to semver1
-    $version = $version.Replace("-beta.", "-beta")
-
-    if (-not $version) {
-        Write-Warning "Couldn't find version number"
-        return "Ignore"
-    }
-
-    $assets = Get-GitHubReleaseAssets $release
-
-    $asset32 = $assets | Where-Object { $_.name.EndsWith("Windows_i386.zip") }
-    $asset64 = $assets | Where-Object { $_.name.EndsWith("Windows_x86_64.zip") }
-
-    $Latest = @{
-        Url32 = $asset32.browser_download_url
-        Url64 = $asset64.browser_download_url
-        Version = $version
-        ReleaseNotes = $release.body.Replace("# ", "## ") # Increase heading levels
-    }
-    return $Latest
+$GithubLatestRelease = Get-GithubLatestRelease @GetGithubReleaseParams
+if( -not $GithubLatestRelease.NeedsUpdate ) {
+    Write-Host "No update needed. Current version $CurrentVersionString is the latest."
+    return
 }
+else{
+    # neew to replace stuff in the nuspec and chocolateyinstall.ps1
+    $NewVersionString = $GithubLatestRelease.Version.ToString()
+    $NewChecksumValue = $GithubLatestRelease.ChecksumValue
+    $NewChecksumAlgo = $GithubLatestRelease.ChecksumAlgo
+    $NewDownloadUrl = $GithubLatestRelease.DownloadUrl
+    Write-Host "Updating to version $NewVersionString"
 
-function global:au_AfterUpdate ($Package) {
-    Update-ReleaseNotes $Package
+    # update the nuspec. We need to replace ###version### with the new version
+    (Get-Content $TemplateNuspecPath) `
+        -replace '###version###', $NewVersionString `
+        | Out-File -FilePath $CurrentNuspecPath -Encoding utf8 -Force
+    # update the chocolateyinstall.ps1. We need to replace ###version###, ###checksum###, ###checksumalg### and ###downloadurl###
+    (Get-Content $TemplateChocolateyInstallPath) `
+        -replace '###version###', $NewVersionString `
+        -replace '###checksum###', $NewChecksumValue `
+        -replace '###checksumalg###', $NewChecksumAlgo `
+        -replace '###downloadurl###', $NewDownloadUrl `
+        | Out-File -FilePath $CurrentChocolateyInstallPath -Encoding utf8 -Force
+
 }
-
-update

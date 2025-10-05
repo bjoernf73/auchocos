@@ -1,5 +1,4 @@
-﻿# variable
-$DSCv3Version = '###version###'
+﻿# variables for v###version###
 $DSCv3ZipCheckSum = '###checksum###'
 $DSCv3ZipCheckSumAlg = '###checksumalg###'
 $DSCv3ZipDownloadUrl = '###downloadurl###'
@@ -13,10 +12,8 @@ $UnzipArgs = @{
   UnzipLocation = $DSCv3InstallPath
   Url           = $DSCv3ZipDownloadUrl
   Checksum      = $DSCv3ZipCheckSum
-  ChecksumType  = $DSCv3ZipCheckSumType
+  ChecksumType  = $DSCv3ZipCheckSumAlg
   Force         = $true
 }
 Install-ChocolateyZipPackage @UnzipArgs
-
-# add to path as well
 Install-ChocolateyPath -PathToInstall $DSCv3InstallPath -PathType 'Machine'

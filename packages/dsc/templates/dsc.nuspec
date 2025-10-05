@@ -3,7 +3,7 @@
   <metadata>
     <id>dsc</id>
     <version>###version###</version>
-    <packageSourceUrl>https://github.com/bjoernf73/auchocos/tree/main/packages/dsc/package/</packageSourceUrl>
+    <packageSourceUrl>https://github.com/bjoernf73/auchocos/tree/main/packages/dsc/package</packageSourceUrl>
     <!-- owners is a poor name for maintainers of the package. It sticks around by this name for compatibility reasons. It basically means you. -->
     <owners>henrikhalt</owners>
     <title>dsc (Install)</title>
@@ -29,7 +29,7 @@ With DSC v3, you can:
 - Author resources to manage your systems in any language
 - Invoke individual resources
 - Create configuration documents that define the desired state of a system</description>
-  <releaseNotes>https://github.com/PowerShell/DSC/releases/tag/v3.1.1</releaseNotes>
+  <releaseNotes>https://github.com/PowerShell/DSC/releases/tag/v###version###</releaseNotes>
   </metadata>
   <files>
     <!-- this section controls what actually gets packaged into the Chocolatey package -->
