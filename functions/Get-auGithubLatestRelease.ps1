@@ -17,7 +17,7 @@ function Get-auGithubLatestRelease {
             DownloadFileStringMatch = "x86_64-pc-windows-msvc\.zip$"
             CurrentVersion = [system.version]"3.1.0"
             VersionStringProperty = "name"
-            VersionStringScriptblock = { $VersionString.substring(1) }
+            VersionStringRegex = '^v(\d+\.\d+\.\d+)$'
         }
         Get-auGithubLatestRelease @GetGithubReleaseParams
     .PARAMETER Repo
@@ -28,10 +28,10 @@ function Get-auGithubLatestRelease {
         Regex string to match the file to download from the release assets.
     .PARAMETER VersionStringProperty
         Property to use for creating the version. This produces the string $VersionString, which may be like "v1.2.3"
-    .PARAMETER VersionStringScriptblock
-        The VersionStringProperty created the value of $VersionString. The VersionStringScriptblock can be used to extract a 
-        string that can be used to create a [system.version] object. For instance when the VersionString is "v1.2.3",
-        the $VersionStringScriptblock could be { $VersionString.substring(1) } to create "1.2.3" so we can do [system.version]"1.2.3".
+    .PARAMETER VersionStringRegex
+        The VersionStringRegex is matched against the value of $VersionString, and the second element i.e. the first capturing group 
+        ($matches[1]) is put in $VersionString. This enable us to create a string that can be used to create a system.version, 
+        like [system.version]"1.2.3". If not provided, the full string from $VersionStringProperty is used.
     #>
  
     [CmdletBinding()]
@@ -49,19 +49,25 @@ function Get-auGithubLatestRelease {
         [string]$VersionStringProperty,
 
         [Parameter(Mandatory = $false)]
-        [scriptblock]$VersionStringScriptblock
+        [regex]$VersionStringRegex
     )
     try {
+       
         $ReleasesURL = "https://api.github.com/repos/$Repo/releases"
+        $task = "Getting repo from Github: $ReleasesURL"
         $InvokeWebRequestParams = @{
-            Uri         = $ReleasesURL
-            Method      = 'Get'
+            Uri = $ReleasesURL
+            Method = 'Get'
             ContentType = 'application/json'
-            Headers     = @{ Accept = "application/vnd.github.v3+json" }
+            Headers = @{ Accept = "application/vnd.github.v3+json" }
+            ErrorAction = 'Stop'
         }
         $ReleasesJson = Invoke-WebRequest @InvokeWebRequestParams
-        $ReleasesObj = $ReleasesJson | ConvertFrom-Json
-        # get the latest non-prerelease release
+        
+        $task = "converting response from json"
+        $ReleasesObj = $ReleasesJson.Content | ConvertFrom-Json
+        
+        $task = "getting latest non-pre-release"
         $LatestNoPrerelaseObj = ($ReleasesObj | Where-Object { $_.prerelease -eq $false })[0]
 
         # url              : https://api.github.com/repos/PowerShell/DSC/releases/232324819
@@ -115,6 +121,7 @@ function Get-auGithubLatestRelease {
         # reactions        : @{url=https://api.github.com/repos/PowerShell/DSC/releases/232324819/reactions; total_count=3; +1=0; -1=0; laugh=0; hooray=2; confused=0; heart=0; rocket=1; eyes=0}
         # mentions_count   : 1
 
+        $task = "getting asset matching '$DownloadFileStringMatch'"
         $AssetObj = $LatestNoPrerelaseObj.assets | Where-Object { 
             $_.Name -match "$DownloadFileStringMatch"
         }
@@ -135,15 +142,26 @@ function Get-auGithubLatestRelease {
         # browser_download_url : https://github.com/PowerShell/DSC/releases/download/v3.1.1/DSC-3.1.1-x86_64-pc-windows-msvc.zip
 
         # get the data we need from the new version
+        $task = "extracting version from property '$VersionStringProperty'"
         $VersionString = $LatestNoPrerelaseObj."$VersionStringProperty"
-        if($VersionStringScriptblock){
-            $VersionString = & $VersionStringScriptblock
+        
+        $task = "matching VersionString '$VersionString' with regex '$VersionStringRegex'"
+        if($null -ne $VersionStringRegex){
+            if($VersionString -match $VersionStringRegex){
+                [string]$VersionString = $matches[1]
+            }
+            else{
+                throw "The VersionString '$VersionString' did not match the regex '$VersionStringRegex'"
+            }
         }
+        $task = "creating [system.version] object from string '$VersionString'"
         $Version = [system.version]"$VersionString"
+        
+        $task = "extracting checksum, checksumalgorithm and download url"
         $ChecksumAlgo,$ChecksumValue = $AssetObj.digest -split "\:"
         $DownloadUrl = $AssetObj.browser_download_url
 
-        # return object
+        $task = "creating return object"
         [PSCustomObject]@{
             Version = $Version
             ChecksumAlgo = $ChecksumAlgo
@@ -153,6 +171,6 @@ function Get-auGithubLatestRelease {
         }
     }
     catch{
-        throw "Failed to get latest release info from GitHub API: $($_.Exception.Message)"
+        throw "Failed on task '$task': $($_.Exception.Message)"
     }
 }
