@@ -53,4 +53,4 @@ else{
 Write-Host ">>> showing changes: "
 Get-Content -Path $CurrentNuspecPath1 | % { Write-Host $_}
 Get-Content -Path $CurrentChocolateyInstallPath1 | % { Write-Host $_}
-Write-Host "<<< end of changes"'
+Write-Host "<<< end of changes"
