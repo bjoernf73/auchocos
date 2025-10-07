@@ -24,14 +24,14 @@ try{
         VersionStringRegex = "^v(\d+\.\d+\.\d+)$"
     }
     $GithubLatestRelease = Get-auGithubLatestRelease @GetGithubReleaseParams
-    $GithubLatestRelease | Add-Member -MemberType NoteProperty -Name "WasUpdated" -Value $false
     
     if(-not $GithubLatestRelease.NeedsUpdate){
         Write-Host "Package 'dcs': No update needed. $CurrentVersionString is the latest version."
         return $GithubLatestRelease
     }
     else{
-        Write-Host "Package 'dsc': Needs update. New version '$NewVersionString' vs current version '$CurrentVersionString'."
+        Write-Host "Package 'dsc': Needs update. New version '$($GithubLatestRelease.Version.ToString())' vs current version '$CurrentVersionString'."
+    
         
         # needs to replace stuff in the nuspec and chocolateyinstall.ps1
         $NewVersionString = $GithubLatestRelease.Version.ToString()
@@ -63,6 +63,8 @@ try{
             -replace '###checksumalg###', $NewChecksumAlgo `
             -replace '###downloadurl###', $NewDownloadUrl | 
             Out-File -FilePath $CurrentChocolateyInstallPath -Encoding utf8 -Force
+
+        # if we get here, success updating the package local files. Still needs to be tested and published
         $GithubLatestRelease.WasUpdated = $true
         return $GithubLatestRelease
     }

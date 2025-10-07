@@ -59,14 +59,12 @@ install:
 - pwsh: |
     Get-CimInstance win32_operatingsystem -Property Caption, OSArchitecture, Version | fl Caption, OSArchitecture, Version
     $PSVersionTable
-    [System.Environment]::OSVersion
+     
 - git --version
 - choco upgrade chocolatey 
-- choco install vt-cli -y
 - nuget install -excludeversion
-- pwsh: |
-    git clone -q https://github.com/bjoernf73/auchocos.git $Env:TEMP/auchocos
-    Set-Location $Env:TEMP/auchocos
+- git clone -q https://github.com/bjoernf73/auchocos.git $Env:TEMP/auchocos
+- Set-Location $Env:TEMP/auchocos
 #    . "./update_all.ps1"
 
 # Uncomment the below line if you are using any of the functions from chocolatey-core.extension - https://chocolatey.org/packages/chocolatey-core.extension. Ensure you also have it listed in your package's dependencies

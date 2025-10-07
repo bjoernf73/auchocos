@@ -12,7 +12,10 @@ try{
         try{
             $uResult = & .\update.ps1
             if($true -eq $uResult.WasUpdated){
-                $tResult = & .\test.ps1
+                $tResult = & .\test.ps1 -uResult $uResult
+            }
+            else{
+                # test not needed, no update
             }
         }
         catch{

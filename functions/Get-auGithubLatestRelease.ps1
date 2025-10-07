@@ -168,6 +168,9 @@ function Get-auGithubLatestRelease {
             ChecksumValue = $ChecksumValue.ToUpper()
             DownloadUrl = $DownloadUrl
             NeedsUpdate = $(if ($Version -gt $CurrentVersion) { $true } else { $false } )
+            WasUpdated = $false
+            TestSuccess = $false
+            PushSuccess = $false
         }
     }
     catch{
