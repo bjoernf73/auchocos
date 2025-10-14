@@ -48,5 +48,8 @@ try{
     }
 }
 catch{
+    throw "$_"
+}
+finally{
     Pop-Location
 }
