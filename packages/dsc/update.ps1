@@ -7,8 +7,8 @@ try{
     $TemplateChocolateyInstallPath = Join-Path -Path $TemplatesRoot -Child Path "chocolateyinstall.ps1"
     
     
-    $CurrentNuspecPath  = "$($PSScriptRoot)\package\dsc.nuspec"
-    $CurrentChocolateyInstallPath = "$($PSScriptRoot)\package\tools\chocolateyinstall.ps1"
+    $CurrentNuspecPath  = "$($PSScriptRoot)\dsc.nuspec"
+    $CurrentChocolateyInstallPath = "$($PSScriptRoot)\tools\chocolateyinstall.ps1"
 
     # get the current version
     [xml]$doc = Get-Content $CurrentNuspecPath
