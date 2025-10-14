@@ -3,8 +3,8 @@ try{
     $TemplatesRoot = "$($PSScriptRoot)\..\..\templates\dsc"
 
     # templates paths are paths to templates with replacement patterns that replaces the dynamic files on the package
-    $TemplateNuspecPath = Join-Path -Path $TemplatesRoot -Child Path "dsc.nuspec"
-    $TemplateChocolateyInstallPath = Join-Path -Path $TemplatesRoot -Child Path "chocolateyinstall.ps1"
+    $TemplateNuspecPath = Join-Path -Path $TemplatesRoot -ChildPath "dsc.nuspec"
+    $TemplateChocolateyInstallPath = Join-Path -Path $TemplatesRoot -ChildPath "chocolateyinstall.ps1"
     
     
     $CurrentNuspecPath  = "$($PSScriptRoot)\dsc.nuspec"
