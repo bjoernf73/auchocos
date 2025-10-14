@@ -3,7 +3,7 @@
   <metadata>
     <id>dsc</id>
     <version>###version###</version>
-    <packageSourceUrl>https://github.com/bjoernf73/auchocos/tree/main/packages/dsc/package</packageSourceUrl>
+    <packageSourceUrl>https://github.com/bjoernf73/auchocos/tree/main/packages/dsc/</packageSourceUrl>
     <!-- owners is a poor name for maintainers of the package. It sticks around by this name for compatibility reasons. It basically means you. -->
     <owners>henrikhalt</owners>
     <title>Desired State Configuration (Install)</title>

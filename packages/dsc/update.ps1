@@ -1,14 +1,14 @@
 try{
     Import-Module -Name "$($PSScriptRoot)\..\..\auchocos.psd1" -Force
+    $TemplatesRoot = "$($PSScriptRoot)\..\..\templates\dsc"
 
-    $TemplateNuspecPath = "$($PSScriptRoot)\templates\dsc.nuspec"
-    $TemplateChocolateyInstallPath = "$($PSScriptRoot)\templates\chocolateyinstall.ps1"
+    # templates paths are paths to templates with replacement patterns that replaces the dynamic files on the package
+    $TemplateNuspecPath = Join-Path -Path $TemplatesRoot -Child Path "dsc.nuspec"
+    $TemplateChocolateyInstallPath = Join-Path -Path $TemplatesRoot -Child Path "chocolateyinstall.ps1"
+    
+    
     $CurrentNuspecPath  = "$($PSScriptRoot)\package\dsc.nuspec"
     $CurrentChocolateyInstallPath = "$($PSScriptRoot)\package\tools\chocolateyinstall.ps1"
-
-    # to be removed - just for test
-    #$CurrentNuspecPath1  = "$($PSScriptRoot)\package\dsc1.nuspec"
-    #$CurrentChocolateyInstallPath1 = "$($PSScriptRoot)\package\tools\chocolateyinstall1.ps1"
 
     # get the current version
     [xml]$doc = Get-Content $CurrentNuspecPath
