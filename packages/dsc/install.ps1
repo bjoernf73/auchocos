@@ -5,8 +5,6 @@ param(
 )
 
 $iResult = [PSCustomObject]@{
-    Package = $Package
-    Version = $Version
     InstallSuccess = $false
     PackSuccess = $false
     Exception = $null

@@ -1,6 +1,6 @@
 # run package specific tests
 param(
-    [string]$Package = 'dsc',
+    [string]$Package,
     [string]$Version
 )
 
