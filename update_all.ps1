@@ -24,6 +24,12 @@ try{
                     Write-Host "$($Package): Testing nuspec '$ThisPackageNuspec'"
                     if(Test-Path -Path $ThisPackageNuspec){
                         Write-Host "$($Package): Found nuspec file."
+                        if(Get-Command -Name Test-Package -ErrorAction SilentlyContinue){
+                            Write-Host "$($Package): Test-Package command found."
+                        }
+                        else{
+                            throw "$($Package): Test-Package command not found. Ensure you have the AU module installef."
+                        }
                         Test-Package -Nu "$ThisPackageNuspec" -Install -Verbose -ErrorAction Stop
                         Write-Host "$($Package): Package test passed."
                         $uResult.Tested = $true
