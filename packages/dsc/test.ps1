@@ -1,14 +1,14 @@
+# run package specific tests
 param(
-    [string]$Package,
-    [string]$Version,
-    [string]$NuspecPath
+    [string]$Package = 'dsc',
+    [string]$Version
 )
+
 try{
     $DscVersionReturn = & dsc.exe --version
     if($LASTEXITCODE -ne 0){
         throw "dsc.exe --version failed with exit code $LASTEXITCODE"
     }
-
     if($DscVersionReturn -eq "dsc $version"){
         Write-Host "dsc: test passed. Version '$Version' is installed."
         return $true

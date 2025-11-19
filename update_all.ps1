@@ -10,46 +10,36 @@ try{
         $ThisPackagePath = Join-Path -Path $PackagesPath -ChildPath $Package
         $ThisPackageNuspec = Join-Path -Path $ThisPackagePath -ChildPath "$Package.nuspec"
         $ThisPackageUpdate = Join-Path -Path $ThisPackagePath -ChildPath 'update.ps1'
+        $ThisPackageInstall = Join-Path -Path $ThisPackagePath -ChildPath 'install.ps1'
         $ThisPackageTest = Join-Path -Path $ThisPackagePath -ChildPath 'test.ps1'
         Set-Location -Path $ThisPackagePath
         try{
             $uResult = $null
-            $tResult = $null
+            $iResult = $false
+            $tResult = $false
 
             $uResult = & $ThisPackageUpdate
+            Write-Host "$($Package): Update result: `n$($uResult | Format-List | Out-String)"
+            
             if($true -eq $uResult.NeedsUpdate -and $uResult.WasUpdated){
-                Write-Host "$($Package): Package was updated to $($uResult.Version.ToString()) - needs testing."
-                # test the package
-                try{
-                    Write-Host "$($Package): Testing nuspec '$ThisPackageNuspec'"
-                    if(Test-Path -Path $ThisPackageNuspec){
-                        Write-Host "$($Package): Found nuspec file."
-                        if(Get-Command -Name Test-Package -ErrorAction SilentlyContinue){
-                            Write-Host "$($Package): Test-Package command found."
-                        }
-                        else{
-                            throw "$($Package): Test-Package command not found. Ensure you have the AU module installef."
-                        }
-                        Test-Package -Nu "$ThisPackageNuspec" -Install -Verbose -ErrorAction Stop
-                        Write-Host "$($Package): Package test passed."
-                        $uResult.Tested = $true
+                Write-Host "$($Package): Package was updated to $($uResult.Version.ToString()) - install."
+                $iResult = & $ThisPackageInstall -Package $Package -Version $uResult.Version.ToString() -NuspecPath $ThisPackageNuspec
+                if($iResult -ne $true){
+                    throw "$($Package): Installation after update failed."
+                }
+                Write-Host "$($Package): Install after update succeeded - test it if test-script exists."
+                if(Test-Path -Path $ThisPackageTest){
+                    $tResult = & $ThisPackageTest -Package $Package -Version $uResult.Version.ToString()
+                    if($tResult -ne $true){
+                        throw "$($Package): Test after update failed."
                     }
-                    else{
-                        throw "$($Package): Nuspec file '$ThisPackageNuspec' not found."
-                    }
+                    Write-Host "$($Package): Test after update succeeded."
                 }
-                catch{
-                    $PSCmdlet.ThrowTerminatingError($_)
-                }
-                # run package specific tests
-                $tResultParams = @{
-                    Package = $Package
-                    Version = $uResult.Version
-                    NuspecPath = $ThisPackageNuspec
-                }
-                $tResult = & $ThisPackageTest @tResultParams
+                else{
+                    Write-Host "$($Package): No test script found - skipping test after update."
+                }  
             }
-            elseif($false -eq $uResult.WasUpdated){
+            elseif($false -eq $uResult.NeedsUpdate){
                 Write-Host "$($Package): No update."
             }
             else{
