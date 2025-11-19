@@ -15,6 +15,7 @@ try{
             $uResult = $null
             $iResult = $null
             $tResult = $false
+            $pResult = $false
 
             $uResult = & $ThisPackageUpdate
             Write-Host "$($Package): Update result: `n$($uResult | Format-List | Out-String)"
@@ -43,11 +44,19 @@ try{
             if($tResult -ne $true){
                 throw "$($Package): Test after update failed."
             }
-            Write-Host "$($Package): Test after update succeeded."
-            
-            if($true -eq $tResult){
-                Write-Host "$($Package): Publish Package"
+            Write-Host "$($Package): Test succeeded - trying to publish package."
+
+            $pResult = Publish-auPackageToChocolatey -Package $Package
+            if($pResult -ne $true){
+                throw "$($Package): Publish to chocolatey.org failed."
             }
+            else{
+                Write-Host "$($Package): Pushing to git"
+                Pop-Location
+                git add . 
+                git commit -m "AppVeyor build update: Package $($Package) updated to version $($uResult.Version.ToString())"
+                #git push origin HEAD:main
+            }   
         }
         catch{
             throw $_

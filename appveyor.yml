@@ -48,8 +48,8 @@ environment:
 
 
 init:
-- git config --global user.email "bjornhenrikformo@gmail.com"
-- git config --global user.name "bjoernf73"
+- git config --global user.email "ci@appveyor.com"
+- git config --global user.name "AppVeyor CI"
 - git config --global core.safecrlf false
 
 install:
@@ -69,6 +69,7 @@ build_script:
 - pwsh: |
     $ErrorActionPreference = 'Stop'
     choco setapikey $env:CHOCO_API_KEY -s https://push.chocolatey.org/
+    git remote set-url origin https://$env:GITHUB_TOKEN@github.com/bjoernf73/auchocos.git
     ./update_all.ps1
 
 #on_finish:
