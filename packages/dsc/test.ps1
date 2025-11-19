@@ -5,7 +5,7 @@ param(
 )
 
 try{
-    $DscVersionReturn = & dsc.exe --version
+    $DscVersionReturn = & "C:\Program Files\dsc\dsc.exe" --version
     if($LASTEXITCODE -ne 0){
         throw "dsc.exe --version failed with exit code $LASTEXITCODE"
     }
