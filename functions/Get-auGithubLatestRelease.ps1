@@ -33,7 +33,6 @@ function Get-auGithubLatestRelease {
         ($matches[1]) is put in $VersionString. This enable us to create a string that can be used to create a system.version, 
         like [system.version]"1.2.3". If not provided, the full string from $VersionStringProperty is used.
     #>
- 
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
