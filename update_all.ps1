@@ -38,18 +38,12 @@ try{
             }
             
             Write-Host "$($Package): Install succeeded."
-            if(Test-Path -Path $ThisPackageTest){
-                $tResult = & $ThisPackageTest -Package $Package -Version $uResult.Version.ToString()
-                if($tResult -ne $true){
-                    throw "$($Package): Test after update failed."
-                }
-                Write-Host "$($Package): Test after update succeeded."
-            }
-            else{
-                Write-Host "$($Package): No test script found - skipping test after update."
-                $tResult = $true
-            }
             
+            $tResult = & $ThisPackageTest -Package $Package -Version $uResult.Version.ToString()
+            if($tResult -ne $true){
+                throw "$($Package): Test after update failed."
+            }
+            Write-Host "$($Package): Test after update succeeded."
             
             if($true -eq $tResult){
                 Write-Host "$($Package): Publish Package"
