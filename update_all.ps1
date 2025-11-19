@@ -18,38 +18,39 @@ try{
 
             $uResult = & $ThisPackageUpdate
             Write-Host "$($Package): Update result: `n$($uResult | Format-List | Out-String)"
-            
-            if($true -eq $uResult.NeedsUpdate -and $uResult.WasUpdated){
-                Write-Host "$($Package): Package was updated to $($uResult.Version.ToString()) - install."
-                $iResult = & $ThisPackageInstall -Package $Package -Version $uResult.Version.ToString() -NuspecPath $ThisPackageNuspec
-                if($true -eq $iResult.PackSuccess -and $iResilt.InstallSuccess){
-                    Write-Host "$($Package): Install after update succeeded."
-                    if(Test-Path -Path $ThisPackageTest){
-                        $tResult = & $ThisPackageTest -Package $Package -Version $uResult.Version.ToString()
-                        if($tResult -ne $true){
-                            throw "$($Package): Test after update failed."
-                        }
-                        Write-Host "$($Package): Test after update succeeded."
-                    }
-                    else{
-                        Write-Host "$($Package): No test script found - skipping test after update."
-                    }
-                }
-                elseif($false -eq $iResult.PackSuccess){
-                    throw "$($Package): Install after update failed - choco pack failed."
-                }
-                elseif($false -eq $iResult.InstallSuccess){
-                    throw "$($Package): Install after update failed - choco install failed."
-                }
-            }
-            elseif($false -eq $uResult.NeedsUpdate){
+
+            if($false -eq $uResult.NeedsUpdate){
                 Write-Host "$($Package): No update."
+                continue
+            }
+            if($false -eq $uResult.WasUpdated){
+                throw "$($Package): NeedsUpdate is true but WasUpdated is false - something went wrong during update."
+            }
+            
+            Write-Host "$($Package): Update succeeded."
+            $iResult = & $ThisPackageInstall -Package $Package -Version $uResult.Version.ToString() -NuspecPath $ThisPackageNuspec
+            
+            if($false -eq $iResult.PackSuccess){
+                throw "$($Package): choco pack failed."
+            }
+            if($false -eq $iResult.InstallSuccess){
+                throw "$($Package): choco install failed."
+            }
+            
+            Write-Host "$($Package): Install succeeded."
+            if(Test-Path -Path $ThisPackageTest){
+                $tResult = & $ThisPackageTest -Package $Package -Version $uResult.Version.ToString()
+                if($tResult -ne $true){
+                    throw "$($Package): Test after update failed."
+                }
+                Write-Host "$($Package): Test after update succeeded."
             }
             else{
-                Write-Host "$($Package): Failed to run."
-                throw "$($Package): Failed to run scripts."
+                Write-Host "$($Package): No test script found - skipping test after update."
+                $tResult = $true
             }
-
+            
+            
             if($true -eq $tResult){
                 Write-Host "$($Package): Publish Package"
             }
