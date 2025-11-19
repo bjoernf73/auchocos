@@ -55,7 +55,7 @@ try{
                 Pop-Location
                 git add . 
                 git commit -m "AppVeyor build update: Package $($Package) updated to version $($uResult.Version.ToString())"
-                #git push origin HEAD:main
+                git push origin HEAD:main
             }   
         }
         catch{
