@@ -50,9 +50,6 @@ try{
             }
         }
         catch{
-            Write-Host "*** Fatal error during update_all.ps1 ***"
-            $Error[0] | Format-List -Property * -Force
-            Write-Host "*****************************************"
             throw $_
         }
     }

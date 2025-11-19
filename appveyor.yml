@@ -46,9 +46,6 @@ environment:
   # Force test: gist id for test results
   #gist_id_test:
 
-  # Chocolatey API key - to push updated packages
-  #api_key:
-  #  secure: not_set_yet
 
 init:
 - git config --global user.email "bjornhenrikformo@gmail.com"
@@ -71,6 +68,7 @@ install:
 build_script:
 - pwsh: |
     $ErrorActionPreference = 'Stop'
+    choco setapikey $env:CHOCO_API_KEY -s https://push.chocolatey.org/
     ./update_all.ps1
 
 #on_finish:
