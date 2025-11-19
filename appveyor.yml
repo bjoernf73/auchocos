@@ -68,7 +68,6 @@ install:
 build_script:
 - pwsh: |
     $ErrorActionPreference = 'Stop'
-    choco setapikey $env:CHOCO_API_KEY -s https://push.chocolatey.org/
     git remote set-url origin https://$env:GITHUB_TOKEN@github.com/bjoernf73/auchocos.git
     ./update_all.ps1
 
