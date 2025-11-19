@@ -5,9 +5,7 @@ try{
     # templates paths are paths to templates with replacement patterns that replaces the dynamic files on the package
     $TemplateNuspecPath = Join-Path -Path $TemplatesRoot -ChildPath "dsc.nuspec"
     $TemplateChocolateyInstallPath = Join-Path -Path $TemplatesRoot -ChildPath "chocolateyinstall.ps1"
-    
-    
-    $CurrentNuspecPath  = "$($PSScriptRoot)\dsc.nuspec"
+    $CurrentNuspecPath = "$($PSScriptRoot)\dsc.nuspec"
     $CurrentChocolateyInstallPath = "$($PSScriptRoot)\tools\chocolateyinstall.ps1"
 
     # get the current version
@@ -32,7 +30,6 @@ try{
     else{
         Write-Host "Package 'dsc': Needs update. New version '$($GithubLatestRelease.Version.ToString())' vs current version '$CurrentVersionString'."
     
-        
         # needs to replace stuff in the nuspec and chocolateyinstall.ps1
         $NewVersionString = $GithubLatestRelease.Version.ToString()
         $NewChecksumValue = $GithubLatestRelease.ChecksumValue

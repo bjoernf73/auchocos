@@ -17,11 +17,20 @@ try{
             $tResult = $null
 
             $uResult = & $ThisPackageUpdate
-            if($true -eq $uResult.WasUpdated){
-                Write-Host "$($Package): Update available."
+            if($true -eq $uResult.NeedsUpdate -and $uResult.WasUpdated){
+                Write-Host "$($Package): Package was updated to $($uResult.Version.ToString()) - needs testing."
+                # test the package
                 try{
                     Write-Host "$($Package): Testing nuspec '$ThisPackageNuspec'"
-                    Test-Package -Nu "$ThisPackageNuspec" -Install
+                    if(Test-Path -Path $ThisPackageNuspec){
+                        Write-Host "$($Package): Found nuspec file."
+                        Test-Package -Nu "$ThisPackageNuspec" -Install -Verbose -ErrorAction Stop
+                        Write-Host "$($Package): Package test passed."
+                        $uResult.Tested = $true
+                    }
+                    else{
+                        throw "$($Package): Nuspec file '$ThisPackageNuspec' not found."
+                    }
                 }
                 catch{
                     $PSCmdlet.ThrowTerminatingError($_)
@@ -48,6 +57,9 @@ try{
     }
 }
 catch{
+    Write-Host "*** Fatal error during update_all.ps1 ***"
+    $Error[0] | Format-List -Property * -Force
+    Write-Host "*****************************************"
     throw $_
 }
 finally{
