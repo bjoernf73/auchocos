@@ -11,17 +11,14 @@ function Publish-auPackageToGit {
         [string]$Message
     )
     try {
-        Set-Location $PSScriptRoot
+        Set-Location -Path $(Split-Path -Path $PSScriptRoot)
         Write-Host "$($Package): Current path '$pwd'"
         Write-Host "$($Package): > Adding changes to git."
         $null = & git add .
         
         Write-Host "$($Package): > Committing changes to git."
-        $gitCommitOut = & git commit -m "AppVeyor build update: Package $($Package) updated to version $($uResult.Version.ToString())"
-        for($c = 0; $c -lt $gitCommitOut.Length; $c++){
-            Write-Host "$($Package): git commit out: $($gitCommitOut[$c])"
-        }
-
+        $gitCommitOut = & git commit -m "$Message"
+        
         Write-Host "$($Package): > Pushing changes to git."
         $gitPushOut = & git push origin HEAD:main
         for($c = 0; $c -lt $gitPushOut.Length; $c++){
@@ -45,6 +42,16 @@ function Publish-auPackageToGit {
         }
     }
     catch {
+        if($gitCommitOut){
+            for($c = 0; $c -lt $gitCommitOut.Length; $c++){
+                Write-Host "$($Package): git commit out: $($gitCommitOut[$c])"
+            }
+        }
+        if($gitPushOut){
+            for($c = 0; $c -lt $gitPushOut.Length; $c++){
+                Write-Host "$($Package): git push out: $($gitPushOut[$c])"
+            }
+        }
         throw $_
     }
 }
