@@ -26,9 +26,11 @@ environment:
 
   # Github token to commit pushed packages to repository
   github_user_repo: bjoernf73/auchocos
-  github_api_key:
-    secure: not_set_yet
-
+  GITHUB_TOKEN:
+    secure: wzNwQuZyKbA9peWuOBmMXVelCCaN80ECavTgAoXZO2FkEoj2sCT9QL8SPnPlV3WOhcZCJGDFGJ33q+sFG1XzoTj8cqD0gE+v6gTSq9O3YTpUkhKRZozlu6hGGHJNQGXP
+  
+  CHOCO_API_KEY:
+    secure: a+leOePlUOEYZuqpa0NY4WVwO8c5nGJBhM/XpK++Qth+UM5/4MCRETbYeXIQRlCs
 
   # Mail credentials - for error notifications
   # mail_user:
