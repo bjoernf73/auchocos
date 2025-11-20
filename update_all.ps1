@@ -3,6 +3,7 @@ try{
     Push-Location
     $PackagesPath = Join-Path "$($PSScriptRoot)" -ChildPath "packages"
     $Packages = @("dsc")
+    $FailedPackages = @()
 
     foreach($Package in $Packages){
         $ThisPackagePath = Join-Path -Path $PackagesPath -ChildPath $Package
@@ -12,10 +13,11 @@ try{
         $ThisPackageTest = Join-Path -Path $ThisPackagePath -ChildPath 'test.ps1'
         Set-Location -Path $ThisPackagePath
         try{
-            $uResult = $null
-            $iResult = $null
-            $tResult = $false
-            $pResult = $false
+            $uResult = $null  # update package result
+            $iResult = $null  # install package result
+            $tResult = $false # test package result
+            $pResult = $false # publish package result
+            $gResult = $false  # git push result
 
             $uResult = & $ThisPackageUpdate
             Write-Host "$($Package): Update result: `n$($uResult | Format-List | Out-String)"
@@ -50,23 +52,44 @@ try{
             if($pResult -ne $true){
                 throw "$($Package): Publish to chocolatey.org failed."
             }
-            else{
-                Write-Host "$($Package): Pushing to git"
-                Pop-Location
-                git add . 
-                git commit -m "AppVeyor build update: Package $($Package) updated to version $($uResult.Version.ToString())"
-                git push origin HEAD:main
-            }   
+            
+            Write-Host "$($Package): Pushing to git"
+            $PublishToGitParams = @{
+                Path = $PSScriptRoot 
+                Package = $Package
+                Message = "AppVeyor build update: Package $($Package) updated to version $($uResult.Version.ToString())"
+            }
+            $gResult = Publish-auPackageToGit @PublishToGitParams
+            # todo: check result?
+                 
         }
         catch{
-            throw $_
+            $FailedPackages+=[PSCustomObject]@{
+                Package = $Package
+                Exception = $PSItem
+                UpdateResult = $uResult
+                InstallResult = $iResult
+                TestResult = $tResult
+                PublishResult = $pResult
+                GitPushResult = $gResult
+            }
         }
+    }
+    if($FailedPackages.Count -gt 0){
+        foreach($failed in $FailedPackages){
+            Write-Host "----------------------------------------"
+            Write-Host "Package '$($failed.Package)' update/install/test/publish/git-push results:"
+            Write-Host "Update result:`n$($failed.UpdateResult | Format-List | Out-String)"
+            Write-Host "Install result:`n$($failed.InstallResult | Format-List | Out-String)"
+            Write-Host "Test result: $($failed.TestResult)"
+            Write-Host "Publish result: $($failed.PublishResult)"
+            Write-Host "Git push result: $($failed.GitPushResult)"
+        }
+        Write-Host "----------------------------------------"
+        throw "Packages failed: $($FailedPackages.Package -join ', ')"
     }
 }
 catch{
-    Write-Host "*** Fatal error during update_all.ps1 ***"
-    $Error[0] | Format-List -Property * -Force
-    Write-Host "*****************************************"
     throw $_
 }
 finally{
