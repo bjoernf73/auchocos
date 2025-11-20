@@ -12,7 +12,7 @@ $iResult = [PSCustomObject]@{
 try{
     Write-Host "$($Package): Testing nuspec '$NuspecPath'"
     # first, create the package
-    & choco pack $NuspecPath --no-progress --confirm
+    $null = & choco pack $NuspecPath --no-progress --confirm
     if($LASTEXITCODE -ne 0){
         $iResult.Exception = "$($Package): choco pack failed with exit code $LASTEXITCODE"
         return $iResult
@@ -20,7 +20,7 @@ try{
     $iResult.PackSuccess = $true
     Write-Host "$($Package): choco pack success."
     
-    & choco install $Package --version "$Version" --source "$pwd" --force --no-progress --confirm
+    $null = & choco install $Package --version "$Version" --source "$pwd" --force --no-progress --confirm
     if($LASTEXITCODE -ne 0){
         $iResult.Exception = "$($Package): choco install failed with exit code $LASTEXITCODE"
         return $iResult
