@@ -2,11 +2,11 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>dsc</id>
-    <version>3.0.1</version>
-    <packageSourceUrl>https://github.com/henrikhalt/chocos/tree/master/dsc</packageSourceUrl>
+    <version>3.1.2</version>
+    <packageSourceUrl>https://github.com/bjoernf73/auchocos/tree/main/packages/dsc/</packageSourceUrl>
     <!-- owners is a poor name for maintainers of the package. It sticks around by this name for compatibility reasons. It basically means you. -->
     <owners>henrikhalt</owners>
-    <title>dsc (Install)</title>
+    <title>Desired State Configuration (Install)</title>
     <authors>Microsoft</authors>
     <!-- projectUrl is required for the community feed -->
     <projectUrl>https://github.com/PowerShell/DSC</projectUrl>
@@ -29,7 +29,7 @@ With DSC v3, you can:
 - Author resources to manage your systems in any language
 - Invoke individual resources
 - Create configuration documents that define the desired state of a system</description>
-  <releaseNotes>https://github.com/PowerShell/DSC/releases/tag/v3.0.1</releaseNotes>
+  <releaseNotes>https://github.com/PowerShell/DSC/releases/tag/v3.1.2</releaseNotes>
   </metadata>
   <files>
     <!-- this section controls what actually gets packaged into the Chocolatey package -->

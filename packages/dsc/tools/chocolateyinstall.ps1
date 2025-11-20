@@ -1,21 +1,19 @@
-﻿# variable
-$DSCv3Version = '3.0.1'
-$DSCv3ZipCheckSum = 'eee677873DA773755B34E89FA57FE086E88B1DFF87D560128E48CC5E5D2318525B7'
+# variables for v3.1.2
+$DSCv3ZipCheckSum = '8DC83CCD773D5A43F5907F01034C75C64771DC0E90D53B837C11747AF3D87D43'
+$DSCv3ZipCheckSumAlg = 'sha256'
+$DSCv3ZipDownloadUrl = 'https://github.com/PowerShell/DSC/releases/download/v3.1.2/DSC-3.1.2-x86_64-pc-windows-msvc.zip'
 
 # static
 $ErrorActionPreference = 'Stop';
 $DSCv3InstallPath = Join-Path -Path $env:PROGRAMFILES -ChildPath 'dsc'
-$Url = "https://github.com/PowerShell/DSC/releases/download/v$($DSCv3Version)/DSC-$($DSCv3Version)-x86_64-pc-windows-msvc.zip"
 
 $UnzipArgs = @{
   PackageName   = $env:ChocolateyPackageName
   UnzipLocation = $DSCv3InstallPath
-  Url           = $Url
+  Url           = $DSCv3ZipDownloadUrl
   Checksum      = $DSCv3ZipCheckSum
-  ChecksumType  = 'sha256'
+  ChecksumType  = $DSCv3ZipCheckSumAlg
   Force         = $true
 }
 Install-ChocolateyZipPackage @UnzipArgs
-
-# add to path as well
 Install-ChocolateyPath -PathToInstall $DSCv3InstallPath -PathType 'Machine'
