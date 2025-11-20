@@ -68,7 +68,7 @@ install:
 build_script:
 - pwsh: |
     $ErrorActionPreference = 'Stop'
-    git remote set-url origin https://$env:GITHUB_TOKEN@github.com/bjoernf73/auchocos.git
+    git remote set-url origin https://$($env:GITHUB_TOKEN)@github.com/bjoernf73/auchocos.git
     ./update_all.ps1
 
 #on_finish:
