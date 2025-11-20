@@ -8,7 +8,7 @@ function Publish-auPackageToChocolatey {
     try {
         $ChocoPushSuccess = $false
         $ChocoSuccessString = "was pushed successfully"
-        if($null -eq $ENV:CHOCO_API_KEY)
+        
         if ([string]::IsNullOrEmpty($env:CHOCO_API_KEY)) {
             throw "$($Package): Environment variable CHOCO_API_KEY is not set - cannot publish package to chocolatey.org"
         }
