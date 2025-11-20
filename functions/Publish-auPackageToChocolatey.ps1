@@ -7,9 +7,9 @@ function Publish-auPackageToChocolatey {
 
     try {
         $Nupkg = Get-Item -Path "$pwd\*" -Include "*.nupkg"
-        #choco setapikey $env:CHOCO_API_KEY -s https://push.chocolatey.org/
-        #choco push $($Nupkg.name) -s https://push.chocolatey.org/
-        & choco push $($NuPkg.Name) --source https://push.chocolatey.org/ --api-key $env:CHOCO_API_KEY
+
+        choco apikey --key $env:CHOCO_API_KEY --source https://push.chocolatey.org/
+        choco push $($NuPkg.Name) --source https://push.chocolatey.org/
     
         if ($LASTEXITCODE -eq 0) {
             Write-Host "$($Package): Published choco '$($NuPkg.Name)'"
