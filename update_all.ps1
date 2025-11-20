@@ -20,7 +20,6 @@ try{
             $gResult = $false  # git push result
 
             $uResult = & $ThisPackageUpdate
-            Write-Host "$($Package): Update result: `n$($uResult | Format-List | Out-String)"
 
             if($false -eq $uResult.NeedsUpdate){
                 Write-Host "$($Package): No update."
@@ -60,8 +59,13 @@ try{
                 Message = "AppVeyor build update: Package $($Package) updated to version $($uResult.Version.ToString())"
             }
             $gResult = Publish-auPackageToGit @PublishToGitParams
-            # todo: check result?
-                 
+            if($gResult -ne $true){
+                throw "$($Package): Git: failed."
+            }
+            
+            Write-Host "$($Package): *** result *** `n$($uResult | Format-List | Out-String)"
+            Write-Host "$($Package): **************"
+               
         }
         catch{
             $FailedPackages+=[PSCustomObject]@{
@@ -76,16 +80,16 @@ try{
         }
     }
     if($FailedPackages.Count -gt 0){
-        foreach($failed in $FailedPackages){
-            Write-Host "----------------------------------------"
-            Write-Host "Package '$($failed.Package)' update/install/test/publish/git-push results:"
+        Write-Host "*** there were $($FailedPackages.Count) failed packages ***"
+        foreach($failed in $FailedPackages){   
+            Write-Host "Package '$($failed.Package)'"
             Write-Host "Update result:`n$($failed.UpdateResult | Format-List | Out-String)"
             Write-Host "Install result:`n$($failed.InstallResult | Format-List | Out-String)"
             Write-Host "Test result: $($failed.TestResult)"
             Write-Host "Publish result: $($failed.PublishResult)"
             Write-Host "Git push result: $($failed.GitPushResult)"
         }
-        Write-Host "----------------------------------------"
+        Write-Host "*************************************"
         throw "Packages failed: $($FailedPackages.Package -join ', ')"
     }
 }
