@@ -55,7 +55,7 @@ init:
 install:
 - pwsh: |
     Get-CimInstance win32_operatingsystem -Property Caption, OSArchitecture, Version | fl Caption, OSArchitecture, Version
-    choco upgrade chocolatey
+    choco upgrade chocolatey -y
     if(Test-Path -Path $Env:TEMP/auchocos){
         Remove-Item -Path $Env:TEMP/auchocos -Recurse -Force
     }
