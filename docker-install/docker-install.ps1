@@ -77,7 +77,7 @@ param(
 
     [string]
     [ValidateNotNullOrEmpty()]
-    $DockerVersion = "20.10.9",
+    $DockerVersion = "20.10.9", # appveyor needs client.experimental, which was removed in later versions
 
     [string]
     $ExternalNetAdapter,

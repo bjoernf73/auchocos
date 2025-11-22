@@ -1,0 +1,28 @@
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
+
+SHELL ["powershell", "-Command"]
+
+# Install Chocolatey
+RUN Set-ExecutionPolicy Bypass -Scope Process -Force ; \
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072 ; \
+    iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+# copy root ertificate
+COPY root.cer /root.cer
+
+# add the certificate 
+RUN certutil -addstore Root C:\root.cer
+
+# Download and install AppVeyor Build Agent MSI
+RUN $url = 'http://www.appveyor.com/downloads/build-agent/latest/AppveyorBuildAgent.msi' ; \
+    $out = 'C:\AppveyorBuildAgent.msi' ; \
+    (New-Object Net.WebClient).DownloadFile($url, $out) ; \
+    Start-Process msiexec.exe -ArgumentList '/i', $out, '/quiet', '/qn', '/norestart' -Wait ; \
+    Remove-Item $out -Force
+
+RUN choco install git -y
+RUN choco install visualstudio2022buildtools -y
+RUN choco install appveyorbyoc.powershell -y
+
+# Entrypoint: run the agent service
+ENTRYPOINT ["C:\\Program Files\\AppVeyor\\BuildAgent\\appveyor-build-agent.exe"]
