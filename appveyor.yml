@@ -1,6 +1,6 @@
 # AU template: https://github.com/majkinetor/au-packages-template
-build_cloud: APPVEY Docker
-image: WindowsDocker2022
+build_cloud: APPVEY2-WAN-P Docker
+image: WindowsDocker
 
 version: '{build}'
 max_jobs: 1

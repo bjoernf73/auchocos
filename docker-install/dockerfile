@@ -23,6 +23,7 @@ RUN $url = 'http://www.appveyor.com/downloads/build-agent/latest/AppveyorBuildAg
 RUN choco install git -y
 RUN choco install visualstudio2022buildtools -y
 RUN choco install appveyorbyoc.powershell -y
+RUN choco install powershell-core -y
 
-# Entrypoint: run the agent service
-ENTRYPOINT ["C:\\Program Files\\AppVeyor\\BuildAgent\\appveyor-build-agent.exe"]
+# Entrypoint: run the AppVeyor agent in foreground
+ENTRYPOINT ["C:\\Program Files\\AppVeyor\\BuildAgent\\Appveyor.BuildAgent.Interactive.exe"]
