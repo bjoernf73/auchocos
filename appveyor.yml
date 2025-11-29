@@ -1,5 +1,5 @@
 # AU template: https://github.com/majkinetor/au-packages-template
-build_cloud: APPVEY-WAN-P Docker
+build_cloud: APPVEY2-WAN-P Docker
 image: WindowsDocker
 
 version: '{build}'
