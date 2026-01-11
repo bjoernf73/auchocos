@@ -1,6 +1,5 @@
 # AU template: https://github.com/majkinetor/au-packages-template
-build_cloud: APPVEY2-WAN-P Docker
-image: WindowsDocker
+image: Visual Studio 2022
 
 version: '{build}'
 max_jobs: 1
@@ -24,12 +23,13 @@ environment:
   au_push: false
 
   # Github token to commit pushed packages to repository
+  # Github token to commit pushed packages to repository
   github_user_repo: bjoernf73/auchocos
-  CHOCO_API_KEY:
-    secure: bCPiIy/AIXxQIzzMpJJgfYysSE3DHCm9GgD6uCzFEwkUztB8TwGkVQo7XRAwv734
   GITHUB_TOKEN:
-    secure: RH8Yik8KjWnFsm4pQusowciH+8noGm6SxShLPCHCaPsagw9kliG69Zxi5lmJXuOFtB5bm4ghhRR06y1Sj2F5t1Q1ECdtFalBm5akIF8goq78Zse6lR3t0/2cTwf/sYQT
-
+    secure: wzNwQuZyKbA9peWuOBmMXVelCCaN80ECavTgAoXZO2FkEoj2sCT9QL8SPnPlV3WOhcZCJGDFGJ33q+sFG1XzoTj8cqD0gE+v6gTSq9O3YTpUkhKRZozlu6hGGHJNQGXP
+  
+  CHOCO_API_KEY:
+    secure: a+leOePlUOEYZuqpa0NY4WVwO8c5nGJBhM/XpK++Qth+UM5/4MCRETbYeXIQRlCs
 
   # Mail credentials - for error notifications
   # mail_user:
