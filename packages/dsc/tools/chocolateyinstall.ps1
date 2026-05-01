@@ -1,7 +1,7 @@
-# variables for v3.1.3
+# variables for v3.2.0
 $DSCv3ZipCheckSum = '638F5E93197EBE64D6D15DE743773728E0F0ED22407BD4DECC69581E42D43194'
 $DSCv3ZipCheckSumAlg = 'sha256'
-$DSCv3ZipDownloadUrl = 'https://github.com/PowerShell/DSC/releases/download/v3.1.3/DSC-3.1.3-x86_64-pc-windows-msvc.zip'
+$DSCv3ZipDownloadUrl = 'https://github.com/PowerShell/DSC/releases/download/v3.2.0/DSC-3.2.0-x86_64-pc-windows-msvc.zip'
 
 # static
 $ErrorActionPreference = 'Stop';
