@@ -1,5 +1,9 @@
 # AU template: https://github.com/majkinetor/au-packages-template
-image: Visual Studio 2022
+#image: Visual Studio 2022
+
+# personal build image
+build_cloud: APPVEY-WAN-P
+image: Windows
 
 version: '{build}'
 max_jobs: 1
